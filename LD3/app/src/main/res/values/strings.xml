@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">LD3</string>
+    <string name="loginButton">Prisijungti</string>
+    <string name="username">Vartotojo vardas</string>
+    <string name="password">Slaptažodis</string>
+    <string name="userButton">Redaguoti vartotoją</string>
+    <string name="saveUserButton">Išsaugoti</string>
+    <string name="name">Vardas</string>
+    <string name="surname">Pavardė</string>
+    <string name="email">El. paštas</string>
+    <string name="number">Tel. nr.</string>
+    <string name="companyName">Kompanijos pavadinimas</string>
+    <string name="representative">Atstovas</string>
+    <string name="signoutButton">Atsijungti</string>
+    <string name="deleteButton">Ištrinti paskyrą</string>
+    <string name="folders">Folderiai</string>
+
+</resources>
