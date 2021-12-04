@@ -7,47 +7,40 @@ import GameObjects.EntityWithHealth;
 import GameObjects.TankRelated.Tank;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class CollisionService implements BulletList{
 
-    private List<EntityWithHealth> entities;
+    private List<EntityWithHealth> blocks;
+    private List<EntityWithHealth> healthEntities;
     private List<Explosion> explosions;
     private AbstractEntityFactory factory;
 
-    public CollisionService(List<EntityWithHealth> b, List<Explosion> e){
-        entities = b;
-        explosions = e;
+    public CollisionService(List<EntityWithHealth> blocks, List<Explosion> explosions, List<EntityWithHealth> healthEntities){
+        this.blocks = blocks;
+        this.explosions = explosions;
+        this.healthEntities = healthEntities;
         factory = new ExplosionFactory();
     }
 
     public boolean checkCollisionBetweenTankAndBlock(Rectangle tank){
-        for(EntityWithHealth b : entities){
+        for(EntityWithHealth b : blocks){
             if(b.isVisible() && b.getHitbox().intersects(tank))
                 return true;
         }
         return false;
     }
 
-    public void checkCollisionBetweenBulletAndObject() {
+    public void checkCollisionBetweenBulletAndOtherEntity() {
         for (Bullet b : bullets) {
-            for (EntityWithHealth x : entities) {
+            for (EntityWithHealth x : healthEntities) {
                 if (x.isVisible() && b.isVisible() && b.getHitbox().intersects(x.getHitbox())) {
                     x.decreaseHealth();
                     b.setVisible(false);
                     explosions.add((Explosion) factory.createEntity("Explosion", x.getX(), x.getY()));
                 }
-            }
-        }
-    }
-
-    public void checkCollisionBetweenBulletAndTank(Tank tank){
-        for (Bullet b : bullets) {
-            if (tank.isVisible() && b.isVisible() && b.getHitbox().intersects(tank.getHitbox())) {
-                tank.decreaseHealth();
-                b.setVisible(false);
-                explosions.add((Explosion) factory.createEntity("Explosion", tank.getX(), tank.getY()));
             }
         }
     }

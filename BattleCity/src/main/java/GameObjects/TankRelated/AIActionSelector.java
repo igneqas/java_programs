@@ -28,7 +28,7 @@ public class AIActionSelector {
             directionChangeTimer++;
         }
         if (randomGenerator.nextInt(10) % 3 == 0)
-            return tank.direction;
+            return tank.getDirection();
 
         return 'f';
 

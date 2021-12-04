@@ -1,17 +1,13 @@
 package GameObjects.TankRelated;
 
 import GameMechanics.CollisionService;
-import GameObjects.Bullet;
 import GameObjects.EntityWithHealth;
 import GameObjects.Factories.AbstractEntityFactory;
 import GameObjects.Factories.BulletFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Tank extends EntityWithHealth {
 
-    //protected List<Bullet> bullets;
     protected char direction;
     protected long timeSinceShooting;
     protected Tank enemyTank;
@@ -22,7 +18,6 @@ public abstract class Tank extends EntityWithHealth {
     public Tank(int y, int x) {
         super(y, x);
         this.direction = 'u';
-        //this.bullets = new ArrayList<>();
         this.timeSinceShooting = System.nanoTime();
         tankFiring = new TankFiring(this);
         factory = new BulletFactory();
@@ -59,14 +54,6 @@ public abstract class Tank extends EntityWithHealth {
         setEnemyTank(enemyTank);
     }
 
-    /*public List<Bullet> getBullets() {
-        return bullets;
-    }
-
-    public void setBullets(List<Bullet> bullets) {
-        this.bullets = bullets;
-    }*/
-
     public void setEnemyTank(Tank enemyTank) {
         this.enemyTank = enemyTank;
     }
@@ -83,5 +70,11 @@ public abstract class Tank extends EntityWithHealth {
         this.timeSinceShooting = timeSinceShooting;
     }
 
+    public char getDirection() {
+        return direction;
+    }
 
+    public void setDirection(char direction) {
+        this.direction = direction;
+    }
 }

@@ -16,7 +16,7 @@ public class TankMovement {
     }
 
     public void move(){
-        switch (tank.direction) {
+        switch (tank.getDirection()) {
             case 'u':
                 moveUp();
                 break;
