@@ -1,56 +1,63 @@
 package GameMechanics;
 
+import GameObjects.Factories.AbstractEntityFactory;
+import GameObjects.Factories.ExplosionFactory;
 import GameObjects.*;
-import GameObjects.Entity;
+import GameObjects.EntityWithHealth;
+import GameObjects.TankRelated.Tank;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
 
-public class CollisionService {
+public class CollisionService implements BulletList{
 
-    private static ArrayList<Entity> entities;
-    private static ArrayList<Explosion> explosions;
+    private List<EntityWithHealth> entities;
+    private List<Explosion> explosions;
+    private AbstractEntityFactory factory;
 
-    static public void initializeCollisionService(ArrayList<Entity> b, ArrayList<Explosion> e, TankAI tank){
+    public CollisionService(List<EntityWithHealth> b, List<Explosion> e){
         entities = b;
         explosions = e;
+        factory = new ExplosionFactory();
     }
 
-    public static boolean checkCollisionBetweenTankAndBlock(Rectangle tank){
-        for(Entity b : entities){
+    public boolean checkCollisionBetweenTankAndBlock(Rectangle tank){
+        for(EntityWithHealth b : entities){
             if(b.isVisible() && b.getHitbox().intersects(tank))
                 return true;
         }
         return false;
     }
 
-    public static void checkCollisionBetweenBulletAndObject(ArrayList<Bullet> bullets) {
+    public void checkCollisionBetweenBulletAndObject() {
         for (Bullet b : bullets) {
-            for (Entity x : entities) {
+            for (EntityWithHealth x : entities) {
                 if (x.isVisible() && b.isVisible() && b.getHitbox().intersects(x.getHitbox())) {
                     x.decreaseHealth();
                     b.setVisible(false);
-                    explosions.add(new Explosion(x.getY(),x.getX()));
+                    explosions.add((Explosion) factory.createEntity("Explosion", x.getX(), x.getY()));
                 }
             }
         }
     }
 
-    public static void checkCollisionBetweenBulletAndTank(ArrayList<Bullet> bullets, Tank tank){
+    public void checkCollisionBetweenBulletAndTank(Tank tank){
         for (Bullet b : bullets) {
             if (tank.isVisible() && b.isVisible() && b.getHitbox().intersects(tank.getHitbox())) {
                 tank.decreaseHealth();
                 b.setVisible(false);
-                explosions.add(new Explosion(tank.getY(),tank.getX()));
+                explosions.add((Explosion) factory.createEntity("Explosion", tank.getX(), tank.getY()));
             }
         }
     }
 
-    public static boolean checkCollisionBetweenTanks(Rectangle tank, Tank enemyTank){
+    public boolean checkCollisionBetweenTanks(Rectangle tank, Tank enemyTank){
         if(enemyTank.isVisible() && enemyTank.getHitbox().intersects(tank)){
             return true;
         }
-        else return false;
+        else {
+            return false;
+        }
     }
 }

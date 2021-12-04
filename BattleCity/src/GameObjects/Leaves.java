@@ -2,11 +2,18 @@ package GameObjects;
 
 import javax.swing.*;
 
-public class Leaves extends Entity {
+public class Leaves extends EntityWithHealth {
+
+
     public Leaves(int y, int x) {
         super(y, x);
         this.image = new ImageIcon("trees.png").getImage();
-        this.health = 1;
         super.setObjectSize();
+    }
+
+    @Override
+    public void decreaseHealth() {
+        health-=10;
+        super.checkHealth();
     }
 }

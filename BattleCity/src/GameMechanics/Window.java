@@ -1,19 +1,25 @@
 package GameMechanics;
 
+import GameMechanics.KeyboardInput.KeyboardMonitor;
+import GameMechanics.KeyboardInput.Observer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 
-public class Window extends JFrame{
+public class Window extends JFrame implements Observer {
 
     //private JPanel gamePanel;
     private boolean exitWindow = false;
+    private KeyboardMonitor keyboardMonitor;
 
     public Window(){
         initializeWindow();
+        keyboardMonitor = new KeyboardMonitor();
+        keyboardMonitor.AddObserver(this);
+        this.addKeyListener(keyboardMonitor);
         checkForGameStart();
     }
 
@@ -68,7 +74,10 @@ public class Window extends JFrame{
     }
 
     private void checkForGameStart(){
-        this.addKeyListener(new KeyListener() {
+        while(!exitWindow) {
+            System.out.println("Press enter");
+        }
+        /*this.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
 
@@ -96,7 +105,7 @@ public class Window extends JFrame{
                 setVisible(false);
                 break;
             }
-        }
+        }*/
     }
 
     public static Font loadFont(int fontSize) throws IOException, FontFormatException {
@@ -111,8 +120,12 @@ public class Window extends JFrame{
         return font;
     }
 
-    /*public JPanel getGamePanel() {
-        return gamePanel;
-    }*/
+    @Override
+    public void processKeyInput(KeyEvent keyEvent) {
+        System.out.println(keyEvent.getKeyCode());
+        if(keyEvent.getKeyCode() == 10){
+            exitWindow = true;
+        }
+    }
 
 }

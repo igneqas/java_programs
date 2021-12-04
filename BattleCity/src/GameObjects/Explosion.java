@@ -10,6 +10,7 @@ public class Explosion extends Entity {
         this.image = new ImageIcon("bullet_explosion_1.png").getImage();
         timeSinceStartOfExplosion = System.nanoTime();
     }
+
     public void updateImage(){
         if(System.nanoTime()/100000000 - timeSinceStartOfExplosion/100000000 >= 25)
             image = new ImageIcon("bullet_explosion_2.png").getImage();

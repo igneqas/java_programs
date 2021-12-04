@@ -1,26 +1,23 @@
-package GameObjects;
-
-import GameMechanics.CollisionService;
+package GameObjects.TankRelated;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.Random;
 
-public class TankAI extends Tank{
+public class AITank extends Tank {
 
-    private int directionChangeTimer = 0;
-    private final int DIRECTIONUPDATEINTERVAL = 30;
-    private int sinceLastFireTimer = 0;
-    private final int FIREUPDATEINTERVAL = 170;
+    private final AIActionSelector aiActionSelector;
 
-    public TankAI(int y, int x) {
+    public AITank(int y, int x, int directionChangeInterval) {
         super(y, x);
         this.image = new ImageIcon("tank_basic.png").getImage();
-        this.direction = 'u';
         super.setObjectSize();
+        aiActionSelector = new AIActionSelector(this, directionChangeInterval);
     }
 
-    public void decideMove(Tank enemyTank) {
+    public void decideAction() {
+        performTankAction(aiActionSelector.decideMove(enemyTank));
+    }
+
+    /*public void decideMove(PlayerTank enemyTank) {
         Random randomGenerator = new Random();
         if (directionChangeTimer >= DIRECTIONUPDATEINTERVAL) {
             int random = randomGenerator.nextInt(60);
@@ -34,14 +31,15 @@ public class TankAI extends Tank{
             directionChangeTimer++;
         }
         if (randomGenerator.nextInt(10) % 3 == 0)
-            super.move(direction);
+            super.move();
 
-        if (sinceLastFireTimer >= FIREUPDATEINTERVAL) {
+        fire(direction,y,x);
+        *//*if (sinceLastFireTimer >= FIREUPDATEINTERVAL) {
             super.fire(direction, y, x);
             sinceLastFireTimer = 0;
         } else {
             sinceLastFireTimer++;
-        }
+        }*//*
     }
 
     private void pickRandomDirection(){
@@ -62,10 +60,10 @@ public class TankAI extends Tank{
             default:
                 break;
         }
-        changeDirection();
+        performTankAction();
     }
 
-    private void pickDirectionToEnemyTank(Tank enemyTank){
+    private void pickDirectionToEnemyTank(PlayerTank enemyTank){
         Random randomGenerator = new Random();
         if(randomGenerator.nextInt(2)==0){
             if(y<enemyTank.getY()){
@@ -83,10 +81,17 @@ public class TankAI extends Tank{
                 direction = 'l';
             }
         }
-        changeDirection();
+        performTankAction();
     }
 
-    private void changeDirection(){
+    public void performTankAction(){
+        changeDirection(direction);
+        updateImage();
+        move();
+    }*/
+
+    @Override
+    protected void updateImage(){
         switch(direction){
             case 'u':
                 this.image = new ImageIcon("tank_basic.png").getImage();
@@ -103,6 +108,5 @@ public class TankAI extends Tank{
             default:
                 break;
         }
-        super.move(direction);
     }
 }
