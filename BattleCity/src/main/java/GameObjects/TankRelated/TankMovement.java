@@ -1,32 +1,35 @@
 package GameObjects.TankRelated;
 
-import GameMechanics.CollisionService;
+import GameMechanics.CollisionUtility;
 
 import java.awt.*;
 
+import static ExtraUtilities.Constants.*;
+
 public class TankMovement {
+
     private Tank tank;
     private Tank enemyTank;
-    private CollisionService collisionService;
+    private CollisionUtility collisionUtility;
 
-    public TankMovement(Tank tank, Tank enemyTank, CollisionService collisionService) {
+    public TankMovement(Tank tank, Tank enemyTank, CollisionUtility collisionUtility) {
         this.tank = tank;
         this.enemyTank = enemyTank;
-        this.collisionService = collisionService;
+        this.collisionUtility = collisionUtility;
     }
 
-    public void move(){
+    public void move() {
         switch (tank.getDirection()) {
-            case 'u':
+            case DIRECTION_UP:
                 moveUp();
                 break;
-            case 'd':
+            case DIRECTION_DOWN:
                 moveDown();
                 break;
-            case 'l':
+            case DIRECTION_LEFT:
                 moveLeft();
                 break;
-            case 'r':
+            case DIRECTION_RIGHT:
                 moveRight();
                 break;
             default:
@@ -35,26 +38,26 @@ public class TankMovement {
     }
 
     private void moveUp() {
-        if(!collisionService.checkCollisionBetweenTankAndBlock(new Rectangle(tank.getX(),tank.getY()-1,tank.getWidth(),tank.getHeight())) && !collisionService.checkCollisionBetweenTanks(new Rectangle(tank.getX(),tank.getY()-1,tank.getWidth(),tank.getHeight()),enemyTank)) {
-            tank.setY(tank.getY()-1);
+        if (!collisionUtility.tanksCollidesWithBlock(new Rectangle(tank.getX(), tank.getY() - SINGLE_COORDINATE_UNIT, tank.getWidth(), tank.getHeight())) && !collisionUtility.tanksCollide(new Rectangle(tank.getX(), tank.getY() - SINGLE_COORDINATE_UNIT, tank.getWidth(), tank.getHeight()), enemyTank)) {
+            tank.setY(tank.getY() - SINGLE_COORDINATE_UNIT);
         }
     }
 
     private void moveDown() {
-        if(!collisionService.checkCollisionBetweenTankAndBlock(new Rectangle(tank.getX(),tank.getY()+1,tank.getWidth(),tank.getHeight()))&& !collisionService.checkCollisionBetweenTanks(new Rectangle(tank.getX(),tank.getY()+1,tank.getWidth(),tank.getHeight()),enemyTank)){
-            tank.setY(tank.getY()+1);
+        if (!collisionUtility.tanksCollidesWithBlock(new Rectangle(tank.getX(), tank.getY() + SINGLE_COORDINATE_UNIT, tank.getWidth(), tank.getHeight())) && !collisionUtility.tanksCollide(new Rectangle(tank.getX(), tank.getY() + SINGLE_COORDINATE_UNIT, tank.getWidth(), tank.getHeight()), enemyTank)) {
+            tank.setY(tank.getY() + SINGLE_COORDINATE_UNIT);
         }
     }
 
     private void moveLeft() {
-        if(!collisionService.checkCollisionBetweenTankAndBlock(new Rectangle(tank.getX()-1,tank.getY(),tank.getWidth(),tank.getHeight())) && !collisionService.checkCollisionBetweenTanks(new Rectangle(tank.getX()-1,tank.getY(),tank.getWidth(),tank.getHeight()),enemyTank)) {
-            tank.setX(tank.getX()-1);
+        if (!collisionUtility.tanksCollidesWithBlock(new Rectangle(tank.getX() - SINGLE_COORDINATE_UNIT, tank.getY(), tank.getWidth(), tank.getHeight())) && !collisionUtility.tanksCollide(new Rectangle(tank.getX() - SINGLE_COORDINATE_UNIT, tank.getY(), tank.getWidth(), tank.getHeight()), enemyTank)) {
+            tank.setX(tank.getX() - SINGLE_COORDINATE_UNIT);
         }
     }
 
     private void moveRight() {
-        if(!collisionService.checkCollisionBetweenTankAndBlock(new Rectangle(tank.getX()+1,tank.getY(),tank.getWidth(),tank.getHeight())) && !collisionService.checkCollisionBetweenTanks(new Rectangle(tank.getX()+1,tank.getY(),tank.getWidth(),tank.getHeight()),enemyTank)) {
-            tank.setX(tank.getX()+1);
+        if (!collisionUtility.tanksCollidesWithBlock(new Rectangle(tank.getX() + SINGLE_COORDINATE_UNIT, tank.getY(), tank.getWidth(), tank.getHeight())) && !collisionUtility.tanksCollide(new Rectangle(tank.getX() + SINGLE_COORDINATE_UNIT, tank.getY(), tank.getWidth(), tank.getHeight()), enemyTank)) {
+            tank.setX(tank.getX() + SINGLE_COORDINATE_UNIT);
         }
     }
 }

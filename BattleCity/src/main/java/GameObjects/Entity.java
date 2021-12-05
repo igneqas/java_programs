@@ -3,27 +3,21 @@ package GameObjects;
 import java.awt.*;
 
 public abstract class Entity {
-    protected int x,y, health;
+
+    protected int x, y;
     protected Image image;
     protected boolean visible;
-    protected int width,height;
+    protected int width, height;
 
     public Entity(int y, int x) {
         this.x = x;
         this.y = y;
-        this.visible = true;
-        this.health = 10;
+        visible = true;
     }
 
-    protected void setObjectSize(){
+    protected void setObjectSize() {
         width = image.getWidth(null);
         height = image.getHeight(null);
-    }
-
-
-
-    public int getHealth() {
-        return health;
     }
 
     public int getX() {
@@ -58,7 +52,7 @@ public abstract class Entity {
         this.visible = visible;
     }
 
-    public Rectangle getHitbox(){
+    public Rectangle getHitbox() {
         return new Rectangle(x, y, width, height);
     }
 

@@ -4,7 +4,7 @@ import GameObjects.*;
 import GameObjects.TankRelated.AITank;
 import GameObjects.TankRelated.PlayerTank;
 
-public class EntityWithHealthFactory extends AbstractEntityFactory{
+public class EntityWithHealthFactory extends AbstractEntityFactory {
 
 
     @Override

@@ -2,17 +2,19 @@ package GameObjects;
 
 import javax.swing.*;
 
+import static ExtraUtilities.Constants.BULLET_DAMAGE_TO_STEEL;
+
 public class Steel extends EntityWithHealth {
 
     public Steel(int y, int x) {
         super(y, x);
-        this.image = new ImageIcon("steel.png").getImage();
-        super.setObjectSize();
+        image = new ImageIcon("steel.png").getImage();
+        setObjectSize();
     }
 
     @Override
     public void decreaseHealth() {
-        super.health-=2;
-        super.checkHealth();
+        health -= BULLET_DAMAGE_TO_STEEL;
+        checkHealth();
     }
 }

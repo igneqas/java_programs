@@ -15,6 +15,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ExtraUtilities.Constants.*;
+
 public class GameEngine implements Observer, BulletList {
 
     public List<EntityWithHealth> blocks;
@@ -23,7 +25,7 @@ public class GameEngine implements Observer, BulletList {
     private AITank enemyTank;
     private Timer timer;
     private List<Explosion> explosions;
-    private CollisionService collisionService;
+    private CollisionUtility collisionUtility;
     private KeyboardMonitor keyboardMonitor;
     private GameScene gameScene;
 
@@ -35,15 +37,15 @@ public class GameEngine implements Observer, BulletList {
 
         blocks = new ArrayList<>();
         explosions = new ArrayList<>();
-        initializeObjects();
+        createGameEntities();
         addTimer();
     }
 
-    private void addTimer(){
-        timer = new Timer(10, new ActionListener() {
+    private void addTimer() {
+        timer = new Timer(STANDARD_GAME_ENGINE_TIMER_DELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateGameObjectStates();
+                updateGameEntityStates();
                 gameScene.updateScene(getAllEntities());
                 checkGameOver();
             }
@@ -53,75 +55,98 @@ public class GameEngine implements Observer, BulletList {
         timer.start();
     }
 
-    private void initializeObjects(){
+    private void createGameEntities() {
         AbstractEntityFactory factory = EntityFactoryProvider.getFactory("EntityWithHealth");
         assert factory != null;
-        for (int i=0; i<Map.map.length; i++){
-            for(int j=0; j<Map.map[0].length; j++){
-                switch (Map.map[i][j]){
+        for (int i = 0; i < MAP.length; i++) {
+            for (int j = 0; j < MAP[0].length; j++) {
+                switch (MAP[i][j]) {
                     case '#':
-                        blocks.add((EntityWithHealth) factory.createEntity("Border",j*16, i*16));
+                        blocks.add((EntityWithHealth) factory.createEntity("Border", j * STANDARD_BLOCK_WIDTH, i * STANDARD_BLOCK_WIDTH));
                         break;
                     case '&':
-                        blocks.add((EntityWithHealth) factory.createEntity("Brick",j*16, i*16));
+                        blocks.add((EntityWithHealth) factory.createEntity("Brick", j * STANDARD_BLOCK_WIDTH, i * STANDARD_BLOCK_WIDTH));
                         break;
                     case '%':
-                        blocks.add((EntityWithHealth) factory.createEntity("Leaves",j*16, i*16));
+                        blocks.add((EntityWithHealth) factory.createEntity("Leaves", j * STANDARD_BLOCK_WIDTH, i * STANDARD_BLOCK_WIDTH));
                         break;
                     case '@':
-                        playerTank = (PlayerTank) factory.createEntity("PlayerTank",j*16, i*16);
+                        playerTank = (PlayerTank) factory.createEntity("PlayerTank", j * STANDARD_BLOCK_WIDTH, i * STANDARD_BLOCK_WIDTH);
                         break;
                     case '+':
-                        blocks.add((EntityWithHealth) factory.createEntity("Steel",j*16, i*16));
+                        blocks.add((EntityWithHealth) factory.createEntity("Steel", j * STANDARD_BLOCK_WIDTH, i * STANDARD_BLOCK_WIDTH));
                         break;
                     case '*':
-                        enemyTank = (AITank) factory.createEntity("AITank",j*16, i*16, 30);
+                        enemyTank = (AITank) factory.createEntity("AITank", j * STANDARD_BLOCK_WIDTH, i * STANDARD_BLOCK_WIDTH, BASIC_TANK_DIRECTION_CHANGE_INTERVAL);
                         break;
                     default:
                         break;
                 }
             }
         }
-        collisionService = new CollisionService(blocks, explosions, getBlocksAndTanks());
-        playerTank.initializeTankMovement(collisionService, enemyTank);
-        enemyTank.initializeTankMovement(collisionService, playerTank);
-
+        initializeRequiredUtilities();
     }
 
-    private void updateGameObjectStates(){
+    private void initializeRequiredUtilities() {
+        collisionUtility = new CollisionUtility(blocks, explosions, getBlocksAndTanks());
+        playerTank.initializeTankMovement(collisionUtility, enemyTank);
+        enemyTank.initializeTankMovement(collisionUtility, playerTank);
+    }
+
+    private void updateGameEntityStates() {
+        updateEnemyTank();
+        updateBullets();
+        updateExplosionAnimation();
+    }
+
+    private void updateEnemyTank() {
         enemyTank.decideAction();
-        for(Bullet b : bullets){
+    }
+
+    private void updateBullets() {
+        for (Bullet b : bullets) {
             b.move();
         }
-        collisionService.checkCollisionBetweenBulletAndOtherEntity();
+        collisionUtility.checkCollisionBetweenBulletAndOtherEntity();
+    }
 
-        for(Explosion e : explosions){
+    private void updateExplosionAnimation() {
+        for (Explosion e : explosions) {
             e.updateImage();
         }
     }
 
-    private void checkGameOver(){
-        if(!playerTank.isVisible() || !enemyTank.isVisible()) {
+    private void checkGameOver() {
+        if (!playerTank.isVisible() || !enemyTank.isVisible()) {
             System.out.println("Game over");
             timer.stop();
-            gameScene.drawGameOver("Player");
+            determineWinner();
         }
     }
 
-    private void checkForGameStart(){
-        while(!startGame) {
+    private void determineWinner() {
+        if (!enemyTank.isVisible()) {
+            gameScene.drawGameOver("Player");
+        } else {
+            gameScene.drawGameOver("AI");
+        }
+    }
+
+    private void checkForGameStart() {
+        while (!startGame) {
             System.out.println("Press enter");
         }
     }
 
     @Override
     public void processKeyInput(KeyEvent keyEvent) {
-        if(keyEvent.getKeyCode() == 27){
+        if (keyEvent.getKeyCode() == ESC_KEY_CODE) {
             System.exit(0);
-        } else if (keyEvent.getKeyCode() == 10) {
+        } else if (keyEvent.getKeyCode() == ENTER_KEY_CODE) {
             startGame = true;
+        } else {
+            playerTank.processUserCommand(keyEvent);
         }
-        else {playerTank.processUserCommand(keyEvent);}
     }
 
     private List<Entity> getAllEntities() {

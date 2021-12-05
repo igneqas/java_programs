@@ -1,30 +1,34 @@
 package Tests;
 
-import GameMechanics.CollisionService;
+import GameMechanics.CollisionUtility;
 import GameObjects.Brick;
 import GameObjects.EntityWithHealth;
 import GameObjects.TankRelated.AITank;
 import GameObjects.TankRelated.PlayerTank;
 import GameObjects.TankRelated.Tank;
+import GameObjects.TankRelated.TankMovement;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static ExtraUtilities.Constants.*;
+
 public class TankMovementTest {
 
-    Tank enemyTank = new AITank(100, 200, 30);
-    Tank tank = new PlayerTank(100,100);
+    Tank enemyTank = new AITank(100, 200, BASIC_TANK_DIRECTION_CHANGE_INTERVAL);
+    Tank tank = new PlayerTank(100, 100);
 
     @Test
     public void shouldMoveTankLeftByOneUnit() {
         //Given
-        CollisionService collisionService = new CollisionService(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        tank.initializeTankMovement(collisionService, enemyTank);
+        CollisionUtility collisionUtility = new CollisionUtility(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        tank.setDirection(DIRECTION_LEFT);
+        TankMovement tankMovement = new TankMovement(tank, enemyTank, collisionUtility);
 
         //When
-        tank.performTankAction('l');
+        tankMovement.move();
 
         //Then
         Assert.assertEquals(99, tank.getX());
@@ -34,11 +38,12 @@ public class TankMovementTest {
     @Test
     public void shouldMoveTankRightByOneUnit() {
         //Given
-        CollisionService collisionService = new CollisionService(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        tank.initializeTankMovement(collisionService, enemyTank);
+        CollisionUtility collisionUtility = new CollisionUtility(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        tank.setDirection(DIRECTION_RIGHT);
+        TankMovement tankMovement = new TankMovement(tank, enemyTank, collisionUtility);
 
         //When
-        tank.performTankAction('r');
+        tankMovement.move();
 
         //Then
         Assert.assertEquals(101, tank.getX());
@@ -48,11 +53,12 @@ public class TankMovementTest {
     @Test
     public void shouldMoveTankUpByOneUnit() {
         //Given
-        CollisionService collisionService = new CollisionService(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        tank.initializeTankMovement(collisionService, enemyTank);
+        CollisionUtility collisionUtility = new CollisionUtility(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        tank.setDirection(DIRECTION_UP);
+        TankMovement tankMovement = new TankMovement(tank, enemyTank, collisionUtility);
 
         //When
-        tank.performTankAction('u');
+        tankMovement.move();
 
         //Then
         Assert.assertEquals(100, tank.getX());
@@ -62,11 +68,12 @@ public class TankMovementTest {
     @Test
     public void shouldMoveTankDownByOneUnit() {
         //Given
-        CollisionService collisionService = new CollisionService(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        tank.initializeTankMovement(collisionService, enemyTank);
+        CollisionUtility collisionUtility = new CollisionUtility(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        tank.setDirection(DIRECTION_DOWN);
+        TankMovement tankMovement = new TankMovement(tank, enemyTank, collisionUtility);
 
         //When
-        tank.performTankAction('d');
+        tankMovement.move();
 
         //Then
         Assert.assertEquals(100, tank.getX());
@@ -77,12 +84,13 @@ public class TankMovementTest {
     public void shouldNotMoveTankDown() {
         //Given
         List<EntityWithHealth> entities = new ArrayList<>();
-        entities.add(new Brick(125,100));
-        CollisionService collisionService = new CollisionService(entities, new ArrayList<>(), entities);
-        tank.initializeTankMovement(collisionService, enemyTank);
+        entities.add(new Brick(125, 100));
+        CollisionUtility collisionUtility = new CollisionUtility(entities, new ArrayList<>(), entities);
+        tank.setDirection(DIRECTION_DOWN);
+        TankMovement tankMovement = new TankMovement(tank, enemyTank, collisionUtility);
 
         //When
-        tank.performTankAction('d');
+        tankMovement.move();
 
         //Then
         Assert.assertEquals(100, tank.getX());
@@ -93,12 +101,13 @@ public class TankMovementTest {
     public void shouldMoveTankDown() {
         //Given
         List<EntityWithHealth> entities = new ArrayList<>();
-        entities.add(new Brick(126,100));
-        CollisionService collisionService = new CollisionService(entities, new ArrayList<>(), entities);
-        tank.initializeTankMovement(collisionService, enemyTank);
+        entities.add(new Brick(126, 100));
+        CollisionUtility collisionUtility = new CollisionUtility(entities, new ArrayList<>(), entities);
+        tank.setDirection(DIRECTION_DOWN);
+        TankMovement tankMovement = new TankMovement(tank, enemyTank, collisionUtility);
 
         //When
-        tank.performTankAction('d');
+        tankMovement.move();
 
         //Then
         Assert.assertEquals(100, tank.getX());
@@ -109,12 +118,13 @@ public class TankMovementTest {
     public void shouldNotMoveTankLeft() {
         //Given
         List<EntityWithHealth> entities = new ArrayList<>();
-        entities.add(new Brick(100,84));
-        CollisionService collisionService = new CollisionService(entities, new ArrayList<>(), entities);
-        tank.initializeTankMovement(collisionService, enemyTank);
+        entities.add(new Brick(100, 84));
+        CollisionUtility collisionUtility = new CollisionUtility(entities, new ArrayList<>(), entities);
+        tank.setDirection(DIRECTION_LEFT);
+        TankMovement tankMovement = new TankMovement(tank, enemyTank, collisionUtility);
 
         //When
-        tank.performTankAction('l');
+        tankMovement.move();
 
         //Then
         Assert.assertEquals(100, tank.getX());
@@ -125,15 +135,17 @@ public class TankMovementTest {
     public void shouldMoveTankLeft() {
         //Given
         List<EntityWithHealth> entities = new ArrayList<>();
-        entities.add(new Brick(100,83));
-        CollisionService collisionService = new CollisionService(entities, new ArrayList<>(), entities);
-        tank.initializeTankMovement(collisionService, enemyTank);
+        entities.add(new Brick(100, 83));
+        CollisionUtility collisionUtility = new CollisionUtility(entities, new ArrayList<>(), entities);
+        tank.setDirection(DIRECTION_LEFT);
+        TankMovement tankMovement = new TankMovement(tank, enemyTank, collisionUtility);
 
         //When
-        tank.performTankAction('l');
+        tankMovement.move();
 
         //Then
         Assert.assertEquals(99, tank.getX());
         Assert.assertEquals(100, tank.getY());
     }
+
 }

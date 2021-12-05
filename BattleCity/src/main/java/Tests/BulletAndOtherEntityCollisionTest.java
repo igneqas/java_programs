@@ -1,6 +1,6 @@
 package Tests;
 
-import GameMechanics.CollisionService;
+import GameMechanics.CollisionUtility;
 import GameObjects.Brick;
 import GameObjects.Bullet;
 import GameObjects.BulletList;
@@ -13,23 +13,26 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ExtraUtilities.Constants.DIRECTION_DOWN;
+import static ExtraUtilities.Constants.DIRECTION_UP;
+
 public class BulletAndOtherEntityCollisionTest implements BulletList {
 
     @Test
     public void shouldDamageBrickAndMakeBulletInvisible() {
         //Given
         Brick brick = new Brick(100, 100);
-        Bullet bullet = new Bullet(95, 103, 'u');
+        Bullet bullet = new Bullet(95, 103, DIRECTION_UP);
         bullets.add(bullet);
         List<EntityWithHealth> blocks = new ArrayList<>();
         blocks.add(brick);
-        CollisionService collisionService = new CollisionService(blocks, new ArrayList<>(), blocks);
+        CollisionUtility collisionUtility = new CollisionUtility(blocks, new ArrayList<>(), blocks);
 
         //When
-        collisionService.checkCollisionBetweenBulletAndOtherEntity();
+        collisionUtility.checkCollisionBetweenBulletAndOtherEntity();
 
         //Then
-        Assert.assertEquals(7, brick.getHealth());
+        Assert.assertEquals(6, brick.getHealth());
         Assert.assertFalse(bullet.isVisible());
     }
 
@@ -37,14 +40,14 @@ public class BulletAndOtherEntityCollisionTest implements BulletList {
     public void shouldDamageTankAndMakeBulletInvisible() {
         //Given
         Tank tank = new PlayerTank(100, 100);
-        Bullet bullet = new Bullet(102, 99, 'd');
+        Bullet bullet = new Bullet(102, 99, DIRECTION_DOWN);
         bullets.add(bullet);
         List<EntityWithHealth> healthEntities = new ArrayList<>();
         healthEntities.add(tank);
-        CollisionService collisionService = new CollisionService(new ArrayList<>(), new ArrayList<>(), healthEntities);
+        CollisionUtility collisionUtility = new CollisionUtility(new ArrayList<>(), new ArrayList<>(), healthEntities);
 
         //When
-        collisionService.checkCollisionBetweenBulletAndOtherEntity();
+        collisionUtility.checkCollisionBetweenBulletAndOtherEntity();
 
         //Then
         Assert.assertEquals(5, tank.getHealth());

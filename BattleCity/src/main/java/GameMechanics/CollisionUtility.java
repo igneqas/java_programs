@@ -7,27 +7,26 @@ import GameObjects.EntityWithHealth;
 import GameObjects.TankRelated.Tank;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class CollisionService implements BulletList{
+public class CollisionUtility implements BulletList {
 
     private List<EntityWithHealth> blocks;
     private List<EntityWithHealth> healthEntities;
     private List<Explosion> explosions;
     private AbstractEntityFactory factory;
 
-    public CollisionService(List<EntityWithHealth> blocks, List<Explosion> explosions, List<EntityWithHealth> healthEntities){
+    public CollisionUtility(List<EntityWithHealth> blocks, List<Explosion> explosions, List<EntityWithHealth> healthEntities) {
         this.blocks = blocks;
         this.explosions = explosions;
         this.healthEntities = healthEntities;
         factory = new ExplosionFactory();
     }
 
-    public boolean checkCollisionBetweenTankAndBlock(Rectangle tank){
-        for(EntityWithHealth b : blocks){
-            if(b.isVisible() && b.getHitbox().intersects(tank))
+    public boolean tanksCollidesWithBlock(Rectangle tank) {
+        for (EntityWithHealth b : blocks) {
+            if (b.isVisible() && b.getHitbox().intersects(tank))
                 return true;
         }
         return false;
@@ -45,12 +44,7 @@ public class CollisionService implements BulletList{
         }
     }
 
-    public boolean checkCollisionBetweenTanks(Rectangle tank, Tank enemyTank){
-        if(enemyTank.isVisible() && enemyTank.getHitbox().intersects(tank)){
-            return true;
-        }
-        else {
-            return false;
-        }
+    public boolean tanksCollide(Rectangle tank, Tank enemyTank) {
+        return enemyTank.isVisible() && enemyTank.getHitbox().intersects(tank);
     }
 }

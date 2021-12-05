@@ -26,22 +26,18 @@ public class KeyboardMonitor implements KeyListener, Observable {
     public void keyReleased(KeyEvent e) {
     }
 
-    public void NotifyObservers(KeyEvent keyEvent)
-    {
-        for(Observer observer : observerList)
-        {
+    public void NotifyObservers(KeyEvent keyEvent) {
+        for (Observer observer : observerList) {
             observer.processKeyInput(keyEvent);
         }
     }
 
-    public void AddObserver(Observer obs)
-    {
+    public void AddObserver(Observer obs) {
         if (obs != null)
             observerList.add(obs);
     }
 
-    public void DelObserver(Observer obs)
-    {
+    public void DeleteObserver(Observer obs) {
         if (obs != null)
             observerList.remove(obs);
     }

@@ -1,15 +1,15 @@
 package GameObjects.TankRelated;
 
-import GameObjects.TankRelated.Tank;
-
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+
+import static ExtraUtilities.Constants.*;
 
 public class PlayerTank extends Tank {
 
     public PlayerTank(int y, int x) {
         super(y, x);
-        this.image = new ImageIcon("playerTank_up.png").getImage();
+        image = new ImageIcon("playerTank_up.png").getImage();
         super.setObjectSize();
     }
 
@@ -17,24 +17,20 @@ public class PlayerTank extends Tank {
         int userCommand = e.getKeyChar();
         char tankCommand = ' ';
         switch(userCommand){
-            case 119:
-                tankCommand = 'u';
+            case W_KEY_CODE:
+                tankCommand = DIRECTION_UP;
                 break;
-            case 97:
-                tankCommand = 'l';
+            case A_KEY_CODE:
+                tankCommand = DIRECTION_LEFT;
                 break;
-            case 115:
-                tankCommand = 'd';
+            case S_KEY_CODE:
+                tankCommand = DIRECTION_DOWN;
                 break;
-            case 100:
-                tankCommand = 'r';
+            case D_KEY_CODE:
+                tankCommand = DIRECTION_RIGHT;
                 break;
-            case 32:
-                tankCommand = 'f';
-                /*if(isEligibleToShoot()) {
-                    fire(direction, y, x);
-                    timeSinceShooting = System.nanoTime();
-                }*/
+            case SPACE_KEY_CODE:
+                tankCommand = TANK_FIRE;
                 break;
             default:
                 break;
@@ -42,54 +38,20 @@ public class PlayerTank extends Tank {
         performTankAction(tankCommand);
     }
 
-
-
-    /*public void performTankCommand(KeyEvent e){
-        int userCommand = e.getKeyChar();
-        switch(userCommand){
-            case 119:
-                //this.image = new ImageIcon("playerTank_up.png").getImage();
-                changeDirection('u');
-                break;
-            case 97:
-                //this.image = new ImageIcon("playerTank_left.png").getImage();
-                changeDirection('l');
-                break;
-            case 115:
-                //this.image = new ImageIcon("playerTank_down.png").getImage();
-                changeDirection('d');
-                break;
-            case 100:
-                //this.image = new ImageIcon("playerTank_right.png").getImage();
-                changeDirection('r');
-                break;
-            case 32:
-                if(isEligibleToShoot()) {
-                    fire(direction, y, x);
-                    timeSinceShooting = System.nanoTime();
-                }
-                return;
-            default:
-                break;
-        }
-        updateImage();
-        move();
-    }*/
-
     @Override
     protected void updateImage(){
         switch(direction){
-            case 'u':
-                this.image = new ImageIcon("playerTank_up.png").getImage();
+            case DIRECTION_UP:
+                image = new ImageIcon("playerTank_up.png").getImage();
                 break;
-            case 'l':
-                this.image = new ImageIcon("playerTank_left.png").getImage();
+            case DIRECTION_LEFT:
+                image = new ImageIcon("playerTank_left.png").getImage();
                 break;
-            case 'd':
-                this.image = new ImageIcon("playerTank_down.png").getImage();
+            case DIRECTION_DOWN:
+                image = new ImageIcon("playerTank_down.png").getImage();
                 break;
-            case 'r':
-                this.image = new ImageIcon("playerTank_right.png").getImage();
+            case DIRECTION_RIGHT:
+                image = new ImageIcon("playerTank_right.png").getImage();
                 break;
             default:
                 break;

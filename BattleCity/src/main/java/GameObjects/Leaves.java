@@ -2,18 +2,19 @@ package GameObjects;
 
 import javax.swing.*;
 
-public class Leaves extends EntityWithHealth {
+import static ExtraUtilities.Constants.BULLET_DAMAGE_TO_LEAVES;
 
+public class Leaves extends EntityWithHealth {
 
     public Leaves(int y, int x) {
         super(y, x);
-        this.image = new ImageIcon("trees.png").getImage();
-        super.setObjectSize();
+        image = new ImageIcon("trees.png").getImage();
+        setObjectSize();
     }
 
     @Override
     public void decreaseHealth() {
-        health-=10;
-        super.checkHealth();
+        health -= BULLET_DAMAGE_TO_LEAVES;
+        checkHealth();
     }
 }

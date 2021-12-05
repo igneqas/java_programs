@@ -3,7 +3,7 @@ package GameObjects.Factories;
 import GameObjects.Bullet;
 import GameObjects.Entity;
 
-public class BulletFactory extends AbstractEntityFactory{
+public class BulletFactory extends AbstractEntityFactory {
 
     @Override
     public Entity createEntity(String entityType, int x, int y) {
@@ -12,7 +12,7 @@ public class BulletFactory extends AbstractEntityFactory{
 
     @Override
     public Entity createEntity(String entityType, int x, int y, char direction) {
-        return new Bullet(y,x,direction);
+        return new Bullet(y, x, direction);
     }
 
     @Override

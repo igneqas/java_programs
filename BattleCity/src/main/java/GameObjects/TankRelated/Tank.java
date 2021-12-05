@@ -1,41 +1,40 @@
 package GameObjects.TankRelated;
 
-import GameMechanics.CollisionService;
+import GameMechanics.CollisionUtility;
 import GameObjects.EntityWithHealth;
-import GameObjects.Factories.AbstractEntityFactory;
-import GameObjects.Factories.BulletFactory;
+
+import static ExtraUtilities.Constants.*;
 
 
 public abstract class Tank extends EntityWithHealth {
 
-    protected char direction;
-    protected long timeSinceShooting;
-    protected Tank enemyTank;
-    AbstractEntityFactory factory;
     private TankMovement tankMovement;
     private TankFiring tankFiring;
+    private long timeSinceShooting;
+    protected char direction;
+    protected Tank enemyTank;
+
 
     public Tank(int y, int x) {
         super(y, x);
-        this.direction = 'u';
-        this.timeSinceShooting = System.nanoTime();
+        direction = DIRECTION_UP;
+        timeSinceShooting = System.nanoTime();
         tankFiring = new TankFiring(this);
-        factory = new BulletFactory();
     }
 
     @Override
     public void decreaseHealth() {
-        super.health-=5;
-        super.checkHealth();
+        health-=5;
+        checkHealth();
     }
 
-    protected void changeDirection(char newDirection){
+    private void changeDirection(char newDirection){
         direction = newDirection;
         updateImage();
     }
 
-    public void performTankAction(char tankCommand){
-        if(tankCommand == 'f') {
+    protected void performTankAction(char tankCommand){
+        if(tankCommand == TANK_FIRE) {
             tankFiring.fire(direction, y, x);
         } else {
             changeDirection(tankCommand);
@@ -46,11 +45,11 @@ public abstract class Tank extends EntityWithHealth {
     protected abstract void updateImage();
 
     protected boolean isEligibleToShoot(){
-        return System.nanoTime()/1000000000 - timeSinceShooting/1000000000 >= 3;
+        return System.nanoTime()/NANOSECONDS_IN_SECOND - timeSinceShooting/NANOSECONDS_IN_SECOND >= TANK_SHOOT_DELAY;
     }
 
-    public void initializeTankMovement(CollisionService collisionService, Tank enemyTank) {
-        tankMovement = new TankMovement(this, enemyTank, collisionService);
+    public void initializeTankMovement(CollisionUtility collisionUtility, Tank enemyTank) {
+        tankMovement = new TankMovement(this, enemyTank, collisionUtility);
         setEnemyTank(enemyTank);
     }
 
@@ -76,5 +75,9 @@ public abstract class Tank extends EntityWithHealth {
 
     public void setDirection(char direction) {
         this.direction = direction;
+    }
+
+    public TankMovement getTankMovement() {
+        return tankMovement;
     }
 }
