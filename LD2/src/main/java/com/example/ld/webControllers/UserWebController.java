@@ -2,6 +2,7 @@ package com.example.ld.webControllers;
 
 
 import com.example.ld.ds.Company;
+import com.example.ld.ds.Course;
 import com.example.ld.ds.Person;
 import com.example.ld.ds.User;
 import com.example.ld.hibernateControllers.CourseHibernateController;
@@ -129,6 +130,20 @@ public class UserWebController {
     public String getAllUsers() {
         //Gson gson = new Gson();
         return userHibernateController.getAllUsers().toString();//gson.toJson(userHibControl.getAllUsers());
+    }
+
+    @RequestMapping(value = "/user/userInCourse/{id}", method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public String checkParticipant(@RequestBody String request, @PathVariable(name = "id") int id) {
+        Gson gson = new Gson();
+        Properties properties = gson.fromJson(request, Properties.class);
+        Course course = courseHibernateController.getCourseById(Integer.parseInt(properties.getProperty("courseId")));
+        User user = course.getParticipants().stream().filter(u -> u.getId() == id).findFirst().orElse(null);
+        if(user != null) {
+            return "True";
+        }
+        else { return "False"; }
     }
 
     @RequestMapping(value = "/user/getUser/{id}", method = RequestMethod.GET)

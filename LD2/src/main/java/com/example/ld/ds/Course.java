@@ -24,11 +24,11 @@ public class Course implements Serializable {
     @ManyToMany(mappedBy = "myCourses", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @OrderBy("id ASC")
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<User> participants;
+    private List<User> participants = null;
     @ManyToMany(mappedBy = "myAdminCourses", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @OrderBy("id ASC")
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<User> admins;
+    private List<User> admins = null;
     @ManyToOne
     private Person creator;
 

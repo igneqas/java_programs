@@ -133,7 +133,6 @@ public class CourseWebController {
         Gson gson = new Gson();
         Properties properties = gson.fromJson(request, Properties.class);
         Course course = courseHibernateController.getCourseById(id);
-        //User user = userHibernateController.getUserById(Integer.parseInt(properties.getProperty("userId")));
         User user = course.getParticipants().stream().filter(u -> u.getId() == Integer.parseInt(properties.getProperty("userId"))).findFirst().orElse(null);
         course.getCourseFolders().forEach(x -> fullyRemoveAdmin(x.getId(), Integer.parseInt(properties.getProperty("userId"))));
         user.getMyCourses().remove(course);

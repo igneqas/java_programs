@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="476.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ld.fxControllers.CourseUsersWindow">
+
+    <TableView fx:id="usersTable" layoutY="54.0" prefHeight="422.0" prefWidth="417.0">
+        <columns>
+            <TableColumn fx:id="prId" prefWidth="88.0" text="ID" />
+            <TableColumn fx:id="prUsername" prefWidth="179.0" text="Username" />
+            <TableColumn fx:id="prRole" prefWidth="149.0" text="Role" />
+        </columns>
+    </TableView>
+    <Button fx:id="backB" layoutX="22.0" layoutY="14.0" mnemonicParsing="false" onAction="#returnToMain" text="Back" />
+    <Button fx:id="saveB" layoutX="351.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveUsers" text="Save" />
+
+</AnchorPane>

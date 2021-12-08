@@ -7,29 +7,31 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="456.0" prefWidth="804.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ld.fxControllers.MainCoursesWindow">
    <children>
-      <ListView fx:id="myCourses" layoutX="24.0" layoutY="66.0" onMouseClicked="#setEnrollButton" prefHeight="328.0" prefWidth="220.0" />
-      <TreeView fx:id="courseFolders" layoutX="331.0" layoutY="66.0" onMouseClicked="#openFiles" prefHeight="328.0" prefWidth="220.0">
+      <ListView fx:id="courseList" layoutX="24.0" layoutY="66.0" onMouseClicked="#setEnrollButton" prefHeight="328.0" prefWidth="220.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="560.0" AnchorPane.topAnchor="66.0" />
+      <TreeView fx:id="courseFolders" layoutX="331.0" layoutY="66.0" onMouseClicked="#openFiles" prefHeight="328.0" prefWidth="220.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="331.0">
          <contextMenu>
-            <ContextMenu>
+            <ContextMenu fx:id="folderContextMenu">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#createFolder" text="Add folder" />
-                  <MenuItem mnemonicParsing="false" onAction="#openEditFolderWindow" text="Rename" />
-                  <MenuItem mnemonicParsing="false" onAction="#removeFolder" text="Delete" />
+                <MenuItem fx:id="context1" mnemonicParsing="false" onAction="#createFolder" text="Add folder" />
+                  <MenuItem fx:id="context2" mnemonicParsing="false" onAction="#openEditFolderWindow" text="Rename" />
+                  <MenuItem fx:id="context3" mnemonicParsing="false" onAction="#removeFolder" text="Delete" />
               </items>
             </ContextMenu>
          </contextMenu></TreeView>
-      <MenuBar layoutY="2.0" prefHeight="27.0" prefWidth="600.0">
+      <MenuBar layoutY="2.0" prefHeight="27.0" prefWidth="804.0">
         <menus>
             <Menu mnemonicParsing="false" text="Course">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#openEditCourseWindow" text="Edit" />
-                  <MenuItem mnemonicParsing="false" onAction="#openCourseUsersWindow" text="Course users" />
-                  <MenuItem mnemonicParsing="false" onAction="#deleteCourse" text="Delete" />
+                <MenuItem fx:id="courseInfoM" mnemonicParsing="false" onAction="#openEditCourseWindow" text="Info" />
+                  <MenuItem fx:id="courseUsersM" mnemonicParsing="false" onAction="#openCourseUsersWindow" text="Course users" />
+                  <MenuItem fx:id="deleteCourseM" mnemonicParsing="false" onAction="#deleteCourse" text="Delete" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="My account">
@@ -44,22 +46,33 @@
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
+            <Menu fx:id="adminM" mnemonicParsing="false" text="Admin">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#openSystemUsersWindow" text="System users" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
-      <Button layoutX="37.0" layoutY="409.0" mnemonicParsing="false" onAction="#openNewCourseForm" text="Create new course" />
-      <Button fx:id="enrollB" layoutX="266.0" layoutY="91.0" mnemonicParsing="false" onAction="#addUserToCourse" text="Enroll" />
-      <ListView fx:id="folderFiles" layoutX="580.0" layoutY="66.0" prefHeight="328.0" prefWidth="200.0">
+      <Button fx:id="createCourseB" layoutX="37.0" layoutY="409.0" mnemonicParsing="false" onAction="#openNewCourseForm" text="Create new course" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="653.0" AnchorPane.topAnchor="409.0" />
+      <Button fx:id="enrollB" layoutX="263.0" layoutY="92.0" mnemonicParsing="false" onAction="#addUserToCourse" text="Enroll" AnchorPane.bottomAnchor="339.0" AnchorPane.leftAnchor="264.0" />
+      <ListView fx:id="folderFiles" layoutX="580.0" layoutY="66.0" prefHeight="328.0" prefWidth="200.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="580.0">
          <contextMenu>
             <ContextMenu>
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#openEditFileWindow" text="Rename" />
-                  <MenuItem mnemonicParsing="false" onAction="#removeFile" text="Delete" />
+                <MenuItem fx:id="context4" mnemonicParsing="false" onAction="#openEditFileWindow" text="Rename" />
+                  <MenuItem fx:id="context5" mnemonicParsing="false" onAction="#removeFile" text="Delete" />
               </items>
             </ContextMenu>
          </contextMenu></ListView>
-      <Label layoutX="24.0" layoutY="49.0" text="All courses" />
-      <Label layoutX="331.0" layoutY="49.0" text="Course folders" />
-      <Label layoutX="580.0" layoutY="49.0" text="Files" />
-      <Button fx:id="newFileB" layoutX="592.0" layoutY="409.0" mnemonicParsing="false" onAction="#createFile" text="Add new file" />
+      <Label layoutX="331.0" layoutY="49.0" text="Course folders" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="331.0" />
+      <Label layoutX="580.0" layoutY="49.0" text="Files" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="580.0" />
+      <Button fx:id="newFileB" layoutX="592.0" layoutY="409.0" mnemonicParsing="false" onAction="#createFile" text="Add new file" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="592.0" />
+      <TabPane layoutX="19.0" layoutY="38.0" prefHeight="27.0" prefWidth="170.0" styleClass="floating" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="615.0" AnchorPane.topAnchor="39.0">
+        <tabs>
+          <Tab onSelectionChanged="#showMyCourses" text="My courses" />
+          <Tab text="All courses" />
+        </tabs>
+      </TabPane>
+      <Button fx:id="quitCourseB" layoutX="248.0" layoutY="92.0" mnemonicParsing="false" onAction="#exitFromCourse" text="Quit course" />
    </children>
 </AnchorPane>

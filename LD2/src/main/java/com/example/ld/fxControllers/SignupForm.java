@@ -1,9 +1,7 @@
 package com.example.ld.fxControllers;
 
 import com.example.ld.StartGui;
-import com.example.ld.control.RW;
 import com.example.ld.ds.Company;
-import com.example.ld.ds.CourseSystem;
 import com.example.ld.ds.Person;
 import com.example.ld.hibernateControllers.UserHibernateController;
 import javafx.event.ActionEvent;
@@ -22,7 +20,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class SignupForm implements Initializable {
@@ -49,14 +46,8 @@ public class SignupForm implements Initializable {
     @FXML
     public ToggleGroup userType;
 
-    private CourseSystem courseSystem;
-
     EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("CourseSystem");
     UserHibernateController userHibernateController = new UserHibernateController(entityManagerFactory);
-
-    public void setCourseSystem(CourseSystem courseSystem) {
-        this.courseSystem = courseSystem;
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -66,14 +57,27 @@ public class SignupForm implements Initializable {
 
     public void createUser(ActionEvent actionEvent) throws IOException {
         if(radioP.isSelected()){
+            if(loginF.getText().equals("") || passwordF.getText().equals("") || personFirstNameF.getText().equals("") || personLastNameF.getText().equals("") || personEmailF.getText().equals("") || personNumberF.getText().equals("")) {
+                LoginWindow.alertMessage("Signup fields cannot be empty");
+                return;
+            } /*else if (MainCoursesWindow.illegalCharactersUsed(loginF.getText()) || MainCoursesWindow.illegalCharactersUsed(passwordF.getText()) || MainCoursesWindow.illegalCharactersUsed(personFirstNameF.getText()) || MainCoursesWindow.illegalCharactersUsed(personLastNameF.getText()) || MainCoursesWindow.illegalCharactersUsed(personEmailF.getText()) || MainCoursesWindow.illegalCharactersUsed(personNumberF.getText())) {
+                LoginWindow.alertMessage("Name can't contain any of the following characters / \\ : * ? \" < > |");
+                return;
+            }*/
             Person person = new Person(loginF.getText(),passwordF.getText(),personFirstNameF.getText(),personLastNameF.getText(),personEmailF.getText(),personNumberF.getText());
             userHibernateController.createUser(person);
         }
         else{
+            if(loginF.getText().equals("") || passwordF.getText().equals("") || companyNameF.getText().equals("") || companyRepF.getText().equals("")) {
+                LoginWindow.alertMessage("Signup fields cannot be empty");
+                return;
+            } /*else if (MainCoursesWindow.illegalCharactersUsed(loginF.getText()) || MainCoursesWindow.illegalCharactersUsed(passwordF.getText()) || MainCoursesWindow.illegalCharactersUsed(companyNameF.getText()) || MainCoursesWindow.illegalCharactersUsed(companyRepF.getText())) {
+                LoginWindow.alertMessage("Name can't contain any of the following characters / \\ : * ? \" < > |");
+                return;
+            }*/
             Company company = new Company(loginF.getText(),passwordF.getText(),companyNameF.getText(),companyRepF.getText());
             userHibernateController.createUser(company);
         }
-        //RW.writeToFile("out.txt",courseSystem);
         LoginWindow.alertMessage("User successfully created");
         returnToPrevious();
     }

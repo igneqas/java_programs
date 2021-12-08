@@ -30,15 +30,13 @@ public class NewCourseForm {
     @FXML
     public TextArea courseDescription;
 
-    private CourseSystem courseSystem;
     private User user;
 
     EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("CourseSystem");
     CourseHibernateController courseHibernateController = new CourseHibernateController(entityManagerFactory);
     UserHibernateController userHibernateController = new UserHibernateController(entityManagerFactory);
 
-    public void setCourseData(CourseSystem courseSystem, User user) {
-        this.courseSystem = courseSystem;
+    public void setCourseData(User user) {
         this.user = user;
     }
 
@@ -64,7 +62,7 @@ public class NewCourseForm {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("main-courses-window.fxml"));
         Parent root = fxmlLoader.load();
         MainCoursesWindow mainCoursesWindow = fxmlLoader.getController();
-        mainCoursesWindow.setCourseData(courseSystem,user);
+        mainCoursesWindow.setCourseData(user);
         Scene scene = new Scene(root);
         Stage stage = (Stage) courseName.getScene().getWindow();
         stage.setScene(scene);

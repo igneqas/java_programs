@@ -57,8 +57,7 @@ public class EditUserWindow {
     EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("CourseSystem");
     UserHibernateController userHibernateController = new UserHibernateController(entityManagerFactory);
 
-    public void setUserData(CourseSystem courseSystem, User user){
-        this.courseSystem = courseSystem;
+    public void setUserData(User user){
         this.user=user;
         enableFields(user);
     }
@@ -108,7 +107,7 @@ public class EditUserWindow {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("main-courses-window.fxml"));
         Parent root = fxmlLoader.load();
         MainCoursesWindow mainCoursesWindow = fxmlLoader.getController();
-        mainCoursesWindow.setCourseData(courseSystem, user);
+        mainCoursesWindow.setCourseData(user);
         Scene scene = new Scene(root);
         Stage stage = (Stage) personNumberF.getScene().getWindow();
         stage.setScene(scene);

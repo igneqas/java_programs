@@ -20,15 +20,19 @@ public abstract class User implements Serializable {
     private LocalDate dateCreated;
     private LocalDate dateModified;
     @ManyToMany
-    private List<Course> myCourses;
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Course> myCourses = null;
     @ManyToMany
-    private List<Course> myAdminCourses;
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Course> myAdminCourses = null;
     @ManyToMany
     private List<Folder> myFolders;
     @OneToMany(mappedBy = "creator", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @OrderBy("id ASC")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<File> createdFiles;
+    @Enumerated
+    Role userRole;
 
     public User(int id, String username, String password, boolean isActive, LocalDate dateCreated, LocalDate dateModified) {
         this.id = id;
@@ -41,6 +45,8 @@ public abstract class User implements Serializable {
         //this.myAdminCourses = new ArrayList<>();
     }
 
+
+
     public User(String username, String password, boolean isActive, LocalDate dateCreated, LocalDate dateModified) {
         this.username = username;
         this.password = password;
@@ -52,6 +58,7 @@ public abstract class User implements Serializable {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.userRole = Role.REGULAR_USER;
         this.dateCreated = LocalDate.now();
         this.dateModified = LocalDate.now();
         this.isActive = true;
@@ -59,14 +66,27 @@ public abstract class User implements Serializable {
         //this.myAdminCourses = new ArrayList<>();
     }
 
+    public User(String username, String password, Role userRole) {
+        this.username = username;
+        this.password = password;
+        this.userRole = userRole;
+        this.dateCreated = LocalDate.now();
+        this.dateModified = LocalDate.now();
+        this.isActive = true;
+        //this.myCourses = new ArrayList<>();
+        //this.myAdminCourses = new ArrayList<>();
+    }
+
+
+
     public User() {
     }
 
     @Override
     public String toString() {
-        return  "ID = " + id + ", Vartotojo vardas = '" + username + '\'' +
-                ", slaptazodis = '" + password + '\'' +
-                ", paskyros aktyvumas = '" + getActivity() + "\', ";
+        return  "ID = " + id + ", Username = '" + username + '\'' +
+                ", password = '" + password + '\'' +
+                ", activity = '" + getActivity() + "', ";
     }
 
     public String getUsername() {
@@ -151,7 +171,15 @@ public abstract class User implements Serializable {
 
     private String getActivity(){
         if(isActive)
-            return "Aktyvi";
-        else return "Neaktyvi";
+            return "Active";
+        else return "Not active";
+    }
+
+    public Role getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(Role userRole) {
+        this.userRole = userRole;
     }
 }
