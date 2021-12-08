@@ -74,5 +74,8 @@
         </tabs>
       </TabPane>
       <Button fx:id="quitCourseB" layoutX="248.0" layoutY="92.0" mnemonicParsing="false" onAction="#exitFromCourse" text="Quit course" />
+      <Label fx:id="folderCountL" layoutX="332.0" layoutY="401.0" text="Subfolder count: " />
+      <Label fx:id="fileCountL" layoutX="474.0" layoutY="401.0" text="File count:" />
+      <Label fx:id="pathL" layoutX="333.0" layoutY="426.0" text="Path: " />
    </children>
 </AnchorPane>

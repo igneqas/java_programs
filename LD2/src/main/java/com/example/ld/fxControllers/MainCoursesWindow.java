@@ -8,6 +8,7 @@ import com.example.ld.hibernateControllers.FolderHibernateController;
 import com.example.ld.hibernateControllers.UserHibernateController;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -51,9 +52,27 @@ public class MainCoursesWindow implements Initializable {
     public MenuItem courseInfoM;
     @FXML
     public Menu adminM;
+    @FXML
+    public Label folderCountL;
+    @FXML
+    public Label fileCountL;
+    @FXML
+    public Label pathL;
+    @FXML
+    public MenuItem context1;
+    @FXML
+    public MenuItem context2;
+    @FXML
+    public MenuItem context3;
+    @FXML
+    public MenuItem context4;
+    @FXML
+    public MenuItem context5;
 
     private User user;
     private boolean showAllCourses = true;
+    private static int subFolderCount = 0;
+    private static int fileCount = 0;
 
     EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("CourseSystem");
     UserHibernateController userHibernateController = new UserHibernateController(entityManagerFactory);
@@ -80,6 +99,7 @@ public class MainCoursesWindow implements Initializable {
         courseUsersM.setVisible(false);
         deleteCourseM.setVisible(false);
         courseInfoM.setVisible(false);
+
     }
 
     private void fillCourseList() {
@@ -260,14 +280,20 @@ public class MainCoursesWindow implements Initializable {
 
         for (User p : courseHibernateController.getCourseById(selectCourse()).getAdmins()) {
             if (p.getId() == user.getId() || user.getUserRole() == Role.SYSTEM_ADMIN) {
-                courseFolders.removeEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-                folderFiles.removeEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+                context1.setVisible(true);
+                context2.setVisible(true);
+                context3.setVisible(true);
+                context4.setVisible(true);
+                context5.setVisible(true);
                 return;
             }
         }
+        context1.setVisible(false);
+        context2.setVisible(false);
+        context3.setVisible(false);
+        context4.setVisible(false);
+        context5.setVisible(false);
 
-        courseFolders.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        folderFiles.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         courseUsersM.setVisible(false);
         deleteCourseM.setVisible(false);
     }
@@ -379,7 +405,14 @@ public class MainCoursesWindow implements Initializable {
     }
 
     private void fillFiles() {
+        subFolderCount = 0;
+        fileCount = 0;
+
         if(selectFolder() != 0) {
+            pathL.setText("Path: " + getPath(folderHibernateController.getFolderById(selectFolder())));
+            calculateSubFolders(selectFolder());
+            folderCountL.setText("Subfolder count: " + subFolderCount);
+            fileCountL.setText("File count: " + fileCount);
             try {
                 folderFiles.getItems().clear();
                 List<File> files = folderHibernateController.getFolderById(selectFolder()).getFiles();
@@ -393,6 +426,14 @@ public class MainCoursesWindow implements Initializable {
                     return;
                 }
             }
+        } else {
+            pathL.setText("Path: " );
+            courseHibernateController.getCourseById(selectCourse()).getCourseFolders().forEach(f -> {
+                subFolderCount++;
+                calculateSubFolders(f.getId());
+            });
+            folderCountL.setText("Subfolder count: " + subFolderCount);
+            fileCountL.setText("File count: " + fileCount);
         }
         newFileB.setDisable(true);
     }
@@ -484,5 +525,24 @@ public class MainCoursesWindow implements Initializable {
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
+    }
+
+    private void calculateSubFolders(int folderId) {
+        Folder folder = folderHibernateController.getFolderById(folderId);
+        if(folder!= null) {
+            folder.getFiles().forEach(f -> fileCount++);
+            folder.getSubFolders().forEach(f -> {
+                subFolderCount++;
+                calculateSubFolders(f.getId());
+            });
+        }
+    }
+
+    private String getPath(Folder folder){
+        if(folder.getParentCourse() != null){
+            return folder.getParentCourse().getCourseName() + "/" + folder.getFolderName();
+        } else {
+            return getPath(folder.getParentFolder()) + "/" + folder.getFolderName();
+        }
     }
 }
